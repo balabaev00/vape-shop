@@ -1,0 +1,29 @@
+{
+    "include": ["src/**/*"],
+    "compilerOptions": {
+        "module": "commonjs",
+        "declaration": true,
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES2021",
+        "sourceMap": true,
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "incremental": true,
+        "skipLibCheck": true,
+        "strictNullChecks": false,
+        "noImplicitAny": false,
+        "strictBindCallApply": false,
+        "forceConsistentCasingInFileNames": false,
+        "noFallthroughCasesInSwitch": false,
+        "paths": {
+            "@src/*": ["./src/*"],
+            "@moy-sklad/*": ["./src/modules/core/moy-sklad/*"],
+            "@google-sheets/*": ["./src/modules/core/google-sheets/*"],
+            "@vape-shop/*": ["./src/modules/features/vape-shop/*"],
+            "@notification/*": ["./src/modules/core/notification/*"]
+        }
+    }
+}

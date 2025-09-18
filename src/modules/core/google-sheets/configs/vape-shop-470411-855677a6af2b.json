@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "vape-shop-470411",
+  "private_key_id": "855677a6af2b0a5c5724ab21072538ad97d0b8f8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQCMvQ52nYfhMUL2\nxcZzKZzLeQg4mPaMliWTbuMYrKvmtjKv/HJrWGty9PF8i0Ithw4heQ2lVHyaBti9\nRpmmlz7vIhRY4z4JXKK7IfIT/3XS8BR2wctPj17oNjgsuhCYto4ifxAbEDwS8Dm7\nPlwwvze8Bpp1ymVDWRA/ZgwHyIhKLZH/ehZZT1mQ+kHJN4hme8g9DExZLpj/GKHD\nLmSn4luhmLCfqLTuDsKMUXaJVG+RwFQiruz2J15TFCZEHO5XEAQqixH51uexIg/e\ntjXHatdHg6GewmUbyNTWDAK6SUz8XgIZI8KW8ySmZsY6GI6oxk0J715Za9VWxRWm\ne6YLErdhAgMBAAECgf8rSOB6iMgC+8tOiGkjGTnmaeOwmP7Kac7p2eA0UWwXdct/\nzRaHjpb4So31w9miLqirNLy505LgN/CcjbJ5HUD8lWZYKIvEOS3tC3q0D6uueug2\nt7gltw11nbx4ijcI1U/Z/NuXOc6wwdzrI/IkvyWo8mQWtN/yojWeVE/cV4UOIe8q\nY0ziqOpWY1yXVmgpRYCmHeuXuPbHO51ms+PNAYJSratsgfgY9Wl7NguWNRxVjWtP\ntfuXVqx6whOCIIvZzYgh3wyw2Gk2oE7z7N2KLFsvuxlWU5UDoGLygoFA5UucDfTs\nkwHi1/IEPaq4c8FTAK35+q2o3SAo06Jtpdn2ngECgYEAvwovkrpPYsAJswW3tmL7\nCEUBK+mOKi32b/560EZpGajzNEPwbaKfKjJ/+o5HnSUD9xQa6TRqOXoqQbNx6dLq\n9/IY5cn+q+v3JNgR2Cjy8BApYMegYM2p7dtoJLlZuaEwjqYkjW3ZJfEm8BPMM/Er\n9BxCkBc03ns3BrigWod+neECgYEAvJgyOR7cdMjls2SkUudeAzkfVj+YHsO/fNi4\nz6BahBesUlORSMoqv3tYrEmQFwIH1YaWcJMww7OIWRt+FZvuew+EW67o/Rpx8Hmm\nHGl1XTHVsRoHeKei/RvZXK8tWy/m03OciehQb15/X8sqDLo+XmTDC78ksMd0IbS8\n6VFASYECgYARWB1lluCqOIEo7bX2Kxpbb9hhYjzz+2RKWrJPwnS8Tah28EwdyAvn\nStpvpwc9byTjA8JFteqG+V5oxJ/s+Kc4h5RXGHW0qiGwCKXmGCGmRfFbxgP7hfCN\nlcPowaMxxT6hVNgwtu5mEXTVixaZCKZS7VXluxWjtVATniOA1JhcQQKBgDXHMIsZ\nQcQLhXSiPjllwGkq4MS3XaloKDJxmkGaeDUyivDu437eJ1Jy2dZHI89rxNAekMeJ\nMV6c00SVkl6XGGn/Ar8iIU4LPHJWPgfcCpuImmbmBTtikhea2WCUk1ptTmT9kqXA\nmS8owymNxW/bq+0+zl+LIetG9NanszbU9IABAoGAP/U6oEMjqIyKs0aprHcD1v1X\nTyY3XZypnIZRwLZTwM5ZLyWi6VygfxWVJojxRiHOQylYiTp899giRbFlbZQdzR1y\nSo/gTltA9o9GnnPifrZCnzVLrlztJ8BkCcRSd076wT2THEs9CdOZhM2r4FDlxUdY\nVuk1SjtxTXbl/g3m41Q=\n-----END PRIVATE KEY-----\n",
+  "client_email": "vape-shop-account@vape-shop-470411.iam.gserviceaccount.com",
+  "client_id": "103994915757268337190",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vape-shop-account%40vape-shop-470411.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
