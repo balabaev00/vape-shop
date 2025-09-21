@@ -1,6 +1,5 @@
 import { MoySkladModule } from '@moy-sklad/moy-sklad.module';
 import { Module } from '@nestjs/common';
-import { NotificationModule } from '@notification/notification.module';
 
 import { VapeShopGoogleSheetsSalesPlanModule } from './google-sheets/sales-plan/vape-shop.google-sheets.sales-plan.module';
 import { VapeShopReportMessageService } from './services/vape-shop.report.message.service';
@@ -12,7 +11,6 @@ import { VapeShopTurnoverReportService } from './services/vape-shop.turnover.rep
     imports: [
         MoySkladModule,
         VapeShopGoogleSheetsSalesPlanModule,
-        NotificationModule
     ],
     providers: [
         VapeShopTurnoverReportService,
@@ -23,6 +21,7 @@ import { VapeShopTurnoverReportService } from './services/vape-shop.turnover.rep
     exports: [
         VapeShopTurnoverReportService,
         VapeShopSynchronizeService,
+        VapeShopReportMessageService,
     ],
 })
 export class VapeShopModule { }

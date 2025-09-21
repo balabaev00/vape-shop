@@ -18,7 +18,7 @@ export class GoogleSheetsService {
     private readonly logger = new Logger(GoogleSheetsService.name);
     private auth: Auth.GoogleAuth;
     private sheets: sheets_v4.Sheets;
-    private readonly CREDENTIALS_PATH = 'vape-shop-470411-855677a6af2b.json';
+    private readonly CREDENTIALS_PATH = 'vape-shop-470411-f49ea5b9d963.json';
 
     constructor() {
         const credentials = JSON.parse(

@@ -8,7 +8,6 @@ import {
     VapeShopGoogleSheetsSalesPlanService,
 } from '../google-sheets/sales-plan/services/vape-shop.google-sheets.sales-plan.service';
 import { TSalesPlanTable } from '../google-sheets/sales-plan/types';
-import { VapeShopReportMessageService } from './vape-shop.report.message.service';
 
 @Injectable()
 export class VapeShopSynchronizeService {
@@ -18,7 +17,6 @@ export class VapeShopSynchronizeService {
         private readonly moySkladTurnoverService: MoySkladTurnoverService,
         private readonly moySkladRetailStoreService: MoySkladRetailStoreService,
         private readonly vapeShopGoogleSheetsSalesPlanService: VapeShopGoogleSheetsSalesPlanService,
-        private readonly vapeShopReportMessageService: VapeShopReportMessageService,
     ) { }
 
     async getSalesPeriodTurnoverReport() {
@@ -84,10 +82,10 @@ export class VapeShopSynchronizeService {
             });
         }
 
-        await this.vapeShopReportMessageService.sendSummaryReport(
+        return {
             reports,
-            toDay.format('DD.MM.YYYY'),
-        );
+            day: toDay.format('DD.MM.YYYY'),
+        };
     }
 
     private async processRetailStore(

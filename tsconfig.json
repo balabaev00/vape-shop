@@ -23,7 +23,7 @@
             "@moy-sklad/*": ["./src/modules/core/moy-sklad/*"],
             "@google-sheets/*": ["./src/modules/core/google-sheets/*"],
             "@vape-shop/*": ["./src/modules/features/vape-shop/*"],
-            "@notification/*": ["./src/modules/core/notification/*"]
+            "@notification/*": ["src/modules/core/telegram/*"]
         }
     }
 }

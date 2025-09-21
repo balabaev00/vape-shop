@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { NotificationService } from '@notification/notification.service';
 
 interface ISalesReportByAddress {
     address: string;
@@ -9,13 +7,8 @@ interface ISalesReportByAddress {
 
 @Injectable()
 export class VapeShopReportMessageService {
-    private readonly TELEGRAM_VAPE_SHOP_REPORT_CHAT: number;
     constructor(
-        private readonly notificationService: NotificationService,
-        private readonly configService: ConfigService,
-    ) {
-        this.TELEGRAM_VAPE_SHOP_REPORT_CHAT = Number(this.configService.getOrThrow('TELEGRAM_VAPE_SHOP_REPORT_CHAT'));
-    }
+    ) { }
 
     /**
      * Создает таблицу продаж в формате для Telegram
@@ -23,7 +16,7 @@ export class VapeShopReportMessageService {
      * @param period - период отчета
      * @returns отформатированное сообщение с таблицей
      */
-    private createSalesTableMessage(reports: ISalesReportByAddress[], period: string): string {
+    createSalesTableMessage(reports: ISalesReportByAddress[], period: string): string {
         // Собираем все уникальные товары
         const allProducts = new Set<string>();
         for (const report of reports) {
@@ -61,23 +54,12 @@ export class VapeShopReportMessageService {
         return message;
     }
 
-    /**
-     * Отправляет сводный отчет по всем адресам
-     */
-    async sendSummaryReport(
-        reports: ISalesReportByAddress[],
-        period: string,
-    ): Promise<void> {
-        const message = this.createSalesTableMessage(reports, period);
 
-        await this.notificationService.send(this.TELEGRAM_VAPE_SHOP_REPORT_CHAT, message, 'Markdown');
-    }
-
-    async sendReportMessage(
+    createReportMessage(
         address: string,
         salesCountByProductNameMap: Map<string, number>,
         date: string,
-    ) {
+    ): string {
         let message = `**${address}**\n`;
         message += `📅 ${date}\n\n`;
 
@@ -89,6 +71,6 @@ export class VapeShopReportMessageService {
             message += `❌ За указанный период продаж не было\n`;
         }
 
-        await this.notificationService.send(this.TELEGRAM_VAPE_SHOP_REPORT_CHAT, message);
+        return message;
     }
 }
