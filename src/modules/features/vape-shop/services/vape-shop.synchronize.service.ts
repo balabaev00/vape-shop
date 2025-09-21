@@ -115,6 +115,11 @@ export class VapeShopSynchronizeService {
             const productName = row.assortment.name;
             const salesCount = row.outcome.quantity;
 
+            // Пропускаем товары с нежелательными подстроками
+            if (this.shouldSkipProduct(productName)) {
+                continue;
+            }
+
             // Ищем, к какому продукту из productsNames относится эта продажа
             for (const targetProductName of productsNames) {
                 if (productName.toLowerCase().includes(targetProductName.toLowerCase())) {
@@ -130,5 +135,18 @@ export class VapeShopSynchronizeService {
             productsNames,
             salesCountByProductNameMap
         };
+    }
+
+    /**
+     * Проверяет, нужно ли пропустить товар на основе его названия
+     * Исключает товары содержащие: аккумулятор, испаритель, катридж
+     */
+    private shouldSkipProduct(productName: string): boolean {
+        const excludedSubstrings = ['аккумулятор', 'испаритель', 'катридж'];
+        const lowerProductName = productName.toLowerCase();
+
+        return excludedSubstrings.some(substring =>
+            lowerProductName.includes(substring.toLowerCase())
+        );
     }
 }
