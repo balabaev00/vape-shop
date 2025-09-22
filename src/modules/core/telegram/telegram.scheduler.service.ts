@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cron } from '@nestjs/schedule';
 import { VapeShopReportMessageService } from '@src/modules/features/vape-shop/services/vape-shop.report.message.service';
 import { VapeShopSynchronizeService } from '@src/modules/features/vape-shop/services/vape-shop.synchronize.service';
@@ -8,12 +9,16 @@ import { Telegraf } from 'telegraf';
 @Injectable()
 export class TelegramSchedulerService {
     private readonly logger = new Logger(TelegramSchedulerService.name);
+    private readonly TELEGRAM_VAPE_SHOP_REPORT_CHAT: number;
 
     constructor(
         @InjectBot() private readonly bot: Telegraf,
         private readonly vapeShopSynchronizeService: VapeShopSynchronizeService,
         private readonly vapeShopReportMessageService: VapeShopReportMessageService,
-    ) { }
+        private readonly configService: ConfigService,
+    ) {
+        this.TELEGRAM_VAPE_SHOP_REPORT_CHAT = this.configService.getOrThrow('TELEGRAM_VAPE_SHOP_REPORT_CHAT');
+    }
 
     /**
      * Автоматический запуск отчетов каждый день в 22:15 по UTC+9
@@ -26,6 +31,8 @@ export class TelegramSchedulerService {
     async handleDailyReports() {
         this.logger.log('🚀 Запуск автоматических отчетов в 22:15 UTC+9');
 
+        await this.bot.telegram.sendMessage(this.TELEGRAM_VAPE_SHOP_REPORT_CHAT, '🚀 Запущены автоматические отчеты');
+
         try {
             // Запускаем отчет по периоду продаж
             await this.handleSalesPeriodReport();
@@ -35,6 +42,8 @@ export class TelegramSchedulerService {
 
             // Запускаем отчет за сегодня
             await this.handleTodayReport();
+
+            await this.bot.telegram.sendMessage(this.TELEGRAM_VAPE_SHOP_REPORT_CHAT, '✅ Автоматические отчеты успешно выполнены');
 
             this.logger.log('✅ Автоматические отчеты успешно выполнены');
         } catch (error) {
@@ -61,6 +70,8 @@ export class TelegramSchedulerService {
 
             const { reports, day } = await this.vapeShopSynchronizeService.getToDayTurnoverReport();
             const message = this.vapeShopReportMessageService.createSalesTableMessage(reports, day);
+
+            await this.bot.telegram.sendMessage(this.TELEGRAM_VAPE_SHOP_REPORT_CHAT, message);
 
             // Отправляем отчет в Telegram (если есть настроенный чат)
             // Можно добавить логику для отправки в определенный чат
