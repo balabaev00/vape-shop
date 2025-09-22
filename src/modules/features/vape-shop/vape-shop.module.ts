@@ -2,10 +2,9 @@ import { MoySkladModule } from '@moy-sklad/moy-sklad.module';
 import { Module } from '@nestjs/common';
 
 import { VapeShopGoogleSheetsSalesPlanModule } from './google-sheets/sales-plan/vape-shop.google-sheets.sales-plan.module';
+import { VapeShopReportBaseService } from './services/vape-shop.report.base.service';
 import { VapeShopReportMessageService } from './services/vape-shop.report.message.service';
 import { VapeShopSynchronizeService } from './services/vape-shop.synchronize.service';
-import { VapeShopTurnoverCalculatorService } from './services/vape-shop.turnover.calculator.service';
-import { VapeShopTurnoverReportService } from './services/vape-shop.turnover.report.service';
 
 @Module({
     imports: [
@@ -13,13 +12,11 @@ import { VapeShopTurnoverReportService } from './services/vape-shop.turnover.rep
         VapeShopGoogleSheetsSalesPlanModule,
     ],
     providers: [
-        VapeShopTurnoverReportService,
         VapeShopSynchronizeService,
-        VapeShopTurnoverCalculatorService,
         VapeShopReportMessageService,
+        VapeShopReportBaseService,
     ],
     exports: [
-        VapeShopTurnoverReportService,
         VapeShopSynchronizeService,
         VapeShopReportMessageService,
     ],

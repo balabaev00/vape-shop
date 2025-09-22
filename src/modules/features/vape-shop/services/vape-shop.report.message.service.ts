@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-interface ISalesReportByAddress {
-    address: string;
-    salesCountByProductNameMap: Map<string, number>;
-}
+import { TSalesCountByProductNameMap, TSalesReportByAddress } from '../types';
 
 @Injectable()
 export class VapeShopReportMessageService {
@@ -16,7 +13,7 @@ export class VapeShopReportMessageService {
      * @param period - период отчета
      * @returns отформатированное сообщение с таблицей
      */
-    createSalesTableMessage(reports: ISalesReportByAddress[], period: string): string {
+    createSalesTableMessage(reports: TSalesReportByAddress[], period: string): string {
         // Собираем все уникальные товары
         const allProducts = new Set<string>();
         for (const report of reports) {
@@ -36,7 +33,7 @@ export class VapeShopReportMessageService {
         for (const productName of Array.from(allProducts).sort()) {
             const salesByAddress = reports.map(report => ({
                 address: report.address,
-                sales: report.salesCountByProductNameMap.get(productName) || 0
+                sales: report.salesCountByProductNameMap.get(productName)?.salesCount || 0
             }));
 
             // Фильтруем только товары с продажами
@@ -57,7 +54,7 @@ export class VapeShopReportMessageService {
 
     createReportMessage(
         address: string,
-        salesCountByProductNameMap: Map<string, number>,
+        salesCountByProductNameMap: Map<string, TSalesCountByProductNameMap>,
         date: string,
     ): string {
         let message = `**${address}**\n`;
@@ -65,7 +62,7 @@ export class VapeShopReportMessageService {
 
         if (salesCountByProductNameMap.size > 0) {
             for (const product of salesCountByProductNameMap.entries()) {
-                message += `• ${product[0]}: **${product[1]}** шт.\n`;
+                message += `• ${product[0]}: **${product[1].salesCount}** шт.\n`;
             }
         } else {
             message += `❌ За указанный период продаж не было\n`;
