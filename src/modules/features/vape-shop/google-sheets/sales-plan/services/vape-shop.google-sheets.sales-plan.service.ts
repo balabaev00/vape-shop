@@ -8,7 +8,7 @@ import {
     EGoogleSheetsSalePlanTablePeriodsName,
     EGoogleSheetsSalePlanTableSheetName,
 } from '../enums';
-import { TSalesPeriod, TSalesPlanTable } from '../types';
+import { TProductWithCategory, TSalesPeriod, TSalesPlanTable } from '../types';
 
 @Injectable()
 export class VapeShopGoogleSheetsSalesPlanService {
@@ -30,16 +30,20 @@ export class VapeShopGoogleSheetsSalesPlanService {
         );
     }
 
-    getSalesPlanProductsNames(table: TSalesPlanTable): string[] {
+    getSalesPlanProductsNames(table: TSalesPlanTable): TProductWithCategory[] {
         return table.rows
             .map(row => {
+                const category = row.cells.get(EGoogleSheetsSalePlanColumnName.Category)?.value;
                 const productName = row.cells.get(EGoogleSheetsSalePlanColumnName.Product)?.value;
 
                 if (typeof productName === 'string') {
-                    return productName;
+                    return {
+                        category: typeof category === 'string' ? category : '',
+                        productName: productName
+                    };
                 }
             })
-            .filter(Boolean) as string[];
+            .filter(Boolean) as TProductWithCategory[];
     }
 
     getSalesPlanTable(sheetData: IGoogleSheetData): TSalesPlanTable {

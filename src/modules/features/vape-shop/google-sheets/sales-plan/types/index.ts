@@ -23,6 +23,11 @@ export type TSalesPeriod = {
     endDate: dayjs.Dayjs;
 }
 
+export type TProductWithCategory = {
+    category: string;
+    productName: string;
+}
+
 // Тип для таблицы продаж
 export interface ISalesPlanTable {
     rows: TSalesPlanRow[];

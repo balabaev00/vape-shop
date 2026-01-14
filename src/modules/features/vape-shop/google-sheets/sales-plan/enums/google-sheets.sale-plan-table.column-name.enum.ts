@@ -1,4 +1,5 @@
 export enum EGoogleSheetsSalePlanColumnName {
+    Category = 'Категория',
     Product = 'Товар',
     Plan = 'План',
     Sold = 'Продано',

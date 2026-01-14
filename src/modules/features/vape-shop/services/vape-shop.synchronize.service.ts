@@ -18,13 +18,25 @@ export class VapeShopSynchronizeService {
     ) { }
 
     async getSalesPeriodTurnoverReport(): Promise<Map<string, TRetailStoreSalesData>> {
+        // Параллельно загружаем данные из МойСклад и Google Sheets
         const [retailStores, sheetData] = await Promise.all([
             this.moySkladRetailStoreService.get(),
             this.vapeShopGoogleSheetsSalesPlanService.getSheetData(EGoogleSheetsSalePlanTableSheetName.Chita),
         ]);
+
+        // Извлекаем период продаж и данные таблицы
         const salesPeriod = this.vapeShopGoogleSheetsSalesPlanService.getPeriods(sheetData);
         const tableData = this.vapeShopGoogleSheetsSalesPlanService.getSalesPlanTable(sheetData);
-        const productsNames = this.vapeShopGoogleSheetsSalesPlanService.getSalesPlanProductsNames(tableData);
+        const productsWithCategories = this.vapeShopGoogleSheetsSalesPlanService.getSalesPlanProductsNames(tableData);
+
+        // Создаем Map для быстрого доступа к категориям по названию продукта
+        const productCategoryMap = new Map<string, string>();
+        const productsNames: string[] = [];
+
+        for (const productInfo of productsWithCategories) {
+            productsNames.push(productInfo.productName);
+            productCategoryMap.set(productInfo.productName, productInfo.category);
+        }
 
         // Инициализируем общую Map для всех точек продаж
         const totalSalesCountByRetailStore = new Map<string, TRetailStoreSalesData>();
@@ -35,7 +47,7 @@ export class VapeShopSynchronizeService {
                 retailStore,
                 salesPeriod.startDate,
                 salesPeriod.endDate,
-                productsNames,
+                productsWithCategories,
             );
 
             // Получаем или создаем запись для точки продаж
@@ -74,14 +86,18 @@ export class VapeShopSynchronizeService {
 
         // Создаем Map для обновления Google Sheets (только общие количества по товарам)
         const totalSalesCountByProductNameMap = new Map<string, number>();
+
         for (const productName of productsNames) {
             let totalCount = 0;
+
+            // Суммируем продажи по всем точкам продаж
             for (const retailStoreData of totalSalesCountByRetailStore.values()) {
                 const productData = retailStoreData.productsMap.get(productName);
                 if (productData) {
                     totalCount += productData.salesCount;
                 }
             }
+
             totalSalesCountByProductNameMap.set(productName, totalCount);
         }
 
@@ -103,7 +119,7 @@ export class VapeShopSynchronizeService {
             this.vapeShopGoogleSheetsSalesPlanService.getSheetData(EGoogleSheetsSalePlanTableSheetName.Chita),
         ]);
         const tableData = this.vapeShopGoogleSheetsSalesPlanService.getSalesPlanTable(sheetData);
-        const productNames = this.vapeShopGoogleSheetsSalesPlanService.getSalesPlanProductsNames(tableData);
+        const productsWithCategories = this.vapeShopGoogleSheetsSalesPlanService.getSalesPlanProductsNames(tableData);
 
         const reports: TSalesReportByAddress[] = [];
         for (const retailStore of retailStores.rows) {
@@ -111,7 +127,7 @@ export class VapeShopSynchronizeService {
                 retailStore,
                 toDay,
                 toDay,
-                productNames,
+                productsWithCategories,
             );
 
             reports.push({

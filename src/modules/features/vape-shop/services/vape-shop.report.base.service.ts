@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { MoySkladTurnoverService, TMoySkladRetailStore } from '@src/modules/core/moy-sklad';
+import { MoySkladTurnoverService, TMoySkladAssortment, TMoySkladRetailStore } from '@src/modules/core/moy-sklad';
 import dayjs from 'dayjs';
 
+import { TProductWithCategory } from '../google-sheets/sales-plan/types';
 import { TSalesCountByProductNameMap } from '../types';
 
 @Injectable()
@@ -10,12 +11,11 @@ export class VapeShopReportBaseService {
         private readonly moySkladTurnoverService: MoySkladTurnoverService,
     ) { }
 
-
     async processRetailStore(
         retailStore: TMoySkladRetailStore,
         startDate: dayjs.Dayjs,
         endDate: dayjs.Dayjs,
-        productsNames: string[],
+        productsInfo: TProductWithCategory[],
     ): Promise<Map<string, TSalesCountByProductNameMap>> {
         const turnoverReport = await this.moySkladTurnoverService.getTurnoverReport({
             momentFrom: startDate.hour(0).minute(0).second(0).format('YYYY-MM-DD HH:mm:ss'),
@@ -33,19 +33,24 @@ export class VapeShopReportBaseService {
             const salesCount = row.outcome.quantity;
 
             // Пропускаем товары с нежелательными подстроками
-            if (this.shouldSkipProduct(productName)) {
+            if (this.shouldSkipProduct(row.assortment, productsInfo)) {
                 continue;
             }
 
-            // Ищем, к какому продукту из productsNames относится эта продажа
-            for (const targetProductName of productsNames) {
+            // Ищем, к какому продукту из productsInfo относится эта продажа
+            for (const productInfo of productsInfo) {
+                const targetProductName = productInfo.productName;
+
+                // Проверяем соответствие по названию товара
                 if (productName.toLowerCase().includes(targetProductName.toLowerCase())) {
                     const currentProductsMap = salesCountByProductNameMap.get(targetProductName);
 
                     if (currentProductsMap) {
+                        // Обновляем существующий товар
                         currentProductsMap.productsMap.set(productName, salesCount);
                         currentProductsMap.salesCount += salesCount;
                     } else {
+                        // Добавляем новый товар
                         salesCountByProductNameMap.set(targetProductName, {
                             salesCount,
                             productsMap: new Map<string, number>([
@@ -54,7 +59,7 @@ export class VapeShopReportBaseService {
                         });
                     }
 
-                    break;
+                    break; // Нашли соответствие, выходим из цикла
                 }
             }
         }
@@ -63,15 +68,35 @@ export class VapeShopReportBaseService {
     }
 
     /**
-     * Проверяет, нужно ли пропустить товар на основе его названия
+     * Проверяет, нужно ли пропустить товар на основе его названия и категории
      * Исключает товары содержащие: аккумулятор, испаритель, катридж
+     * И проверяет соответствие категории
      */
-    private shouldSkipProduct(productName: string): boolean {
-        const excludedSubstrings = ['аккумулятор', 'испаритель', 'катридж'];
-        const lowerProductName = productName.toLowerCase();
+    private shouldSkipProduct(
+        assortment: TMoySkladAssortment,
+        productsInfo: TProductWithCategory[]
+    ): boolean {
+        const productName = assortment.name.toLowerCase();
 
-        return excludedSubstrings.some(substring =>
-            lowerProductName.includes(substring.toLowerCase())
-        );
+        // Проверяем на нежелательные подстроки
+        const excludedSubstrings = ['аккумулятор', 'испаритель', 'катридж'];
+        if (excludedSubstrings.some(substring => productName.includes(substring.toLowerCase()))) {
+            return true;
+        }
+
+        // Проверяем, есть ли соответствие по категории и названию в наших продуктах
+        const categoryName = assortment.productFolder?.name?.toLowerCase() || '';
+
+        for (const productInfo of productsInfo) {
+            const isProductNameMatch = productName.includes(productInfo.productName.toLowerCase());
+            const isCategoryMatch = categoryName.includes(productInfo.category.toLowerCase()) ||
+                productInfo.category.toLowerCase().includes(categoryName);
+
+            if (isProductNameMatch && (productInfo.category === '' || isCategoryMatch)) {
+                return false; // Товар соответствует, не пропускаем
+            }
+        }
+
+        return true; // Товар не найден в списке, пропускаем
     }
 }
