@@ -71,7 +71,7 @@ export class TelegramSchedulerService {
             const { reports, day } = await this.vapeShopSynchronizeService.getToDayTurnoverReport();
             const message = this.vapeShopReportMessageService.createSalesTableMessage(reports, day);
 
-            await this.bot.telegram.sendMessage(this.TELEGRAM_VAPE_SHOP_REPORT_CHAT, message);
+            await this.bot.telegram.sendMessage(this.TELEGRAM_VAPE_SHOP_REPORT_CHAT, message, { parse_mode: 'Markdown' });
 
             // Отправляем отчет в Telegram (если есть настроенный чат)
             // Можно добавить логику для отправки в определенный чат
